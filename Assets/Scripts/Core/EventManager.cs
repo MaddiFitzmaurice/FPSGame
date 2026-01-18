@@ -6,12 +6,33 @@ public static class EventManager
     private static Dictionary<Enum, Action<object>> _gameEventDict = new Dictionary<Enum, Action<object>>();
 
     // Create an event and add to the dictionary
-    public static void Initialise(Enum gameEventName)
+    public static void Activate(Enum gameEventName)
     {
         if (!_gameEventDict.ContainsKey(gameEventName))
         {
             Action<object> newGameEvent = null;
             _gameEventDict.Add(gameEventName, newGameEvent);
+        }
+    }
+
+    // Delete an event if there are no subscribers 
+    public static bool Deactivate(Enum gameEventName)
+    {
+        if (_gameEventDict.ContainsKey(gameEventName))
+        {
+            if (_gameEventDict[gameEventName].GetInvocationList().Length == 0)
+            {
+                _gameEventDict.Remove(gameEventName);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -21,7 +42,7 @@ public static class EventManager
         // Check if event exists, then sub handler function to it
         if (!_gameEventDict.ContainsKey(gameEventName))
         {
-            Initialise(gameEventName);
+            Activate(gameEventName);
         }
 
         _gameEventDict[gameEventName] += funcToSub;

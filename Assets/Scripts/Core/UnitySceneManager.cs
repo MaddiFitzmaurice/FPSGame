@@ -53,6 +53,7 @@ public class UnitySceneManager : MonoBehaviour
     {
         // If build is running, load in the main menu
         // Otherwise, unload all scenes except Services and reload in order of their layer architecture
+
 #if !UNITY_EDITOR
         StartCoroutine(LoadScene(_mainMenuIndex));
         StartCoroutine(_fader.NormalFadeIn());
