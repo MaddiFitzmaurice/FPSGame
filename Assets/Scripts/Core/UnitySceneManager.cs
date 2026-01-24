@@ -16,7 +16,7 @@ public class UnitySceneManager : MonoBehaviour
     private int _totalScenesNum;
     private int _mainMenuIndex;
     private int _gameplayIndex;
-    private int _servicesIndex;
+    private int _coreIndex;
     #endregion
 
     private void Awake()
@@ -24,11 +24,11 @@ public class UnitySceneManager : MonoBehaviour
         // If using the Unity editor or development build, enable debug logs
         Debug.unityLogger.logEnabled = Debug.isDebugBuild;
 
-        // Get total number of scenes in build and indexes for main menu, gameplay, and services scenes
+        // Get total number of scenes in build and indexes for main menu, gameplay, and core scenes
         _totalScenesNum = SceneManager.sceneCountInBuildSettings;
         _mainMenuIndex = GetBuildIndex("MainMenu");
         _gameplayIndex = GetBuildIndex("Gameplay");
-        _servicesIndex = GetBuildIndex("Services");
+        _coreIndex = GetBuildIndex("Core");
 
         // Init Events
         // EventManager.EventInitialise(EventType.FADING);
@@ -48,11 +48,11 @@ public class UnitySceneManager : MonoBehaviour
         // EventManager.Unsubscribe(EventType.MAIN_MENU, MainMenuUIHandler);
     }
 
-    // After Services Scene is loaded in, additively load in the MainMenu scene
+    // After Core Scene is loaded in, additively load in the MainMenu scene
     private void Start()
     {
         // If build is running, load in the main menu
-        // Otherwise, unload all scenes except Services and reload in order of their layer architecture
+        // Otherwise, unload all scenes except Core and reload in order of their layer architecture
 
 #if !UNITY_EDITOR
         StartCoroutine(LoadScene(_mainMenuIndex));
@@ -65,7 +65,7 @@ public class UnitySceneManager : MonoBehaviour
         {
             Scene scene = SceneManager.GetSceneAt(i);
 
-            if (scene.buildIndex != _servicesIndex)
+            if (scene.buildIndex != _coreIndex)
             {
                 loadedScenes.Enqueue(scene.buildIndex);
                 SceneManager.UnloadSceneAsync(scene);
